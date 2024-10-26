@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appx-api-deployment
+  labels:
+    app: appx-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: appx-api
+  template:
+    metadata:
+      labels:
+        app: appx-api
+    spec:
+      containers:
+      - name: appx-api
+        image: mdarganaraz/dds-deploy-appx:latest
+        ports:
+        - containerPort: 8080
+      imagepullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: service
+metadata:
+  name: appx-api-service
+spec:
+  selector:
+    app: appx-api
+  ports:
+    - procotol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer  
